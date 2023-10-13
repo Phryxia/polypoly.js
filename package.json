@@ -1,0 +1,17 @@
+{
+  "name": "polypoly.js",
+  "description": "Tiny javascript library implements piecewise polynomial",
+  "version": "0.0.1",
+  "main": "./src/index.js",
+  "license": "MIT",
+  "type": "module",
+  "exports": "./src/index.js",
+  "scripts": {
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^0.34.6",
+    "vitest": "^0.34.6"
+  }
+}
