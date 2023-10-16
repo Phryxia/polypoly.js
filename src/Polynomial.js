@@ -17,6 +17,14 @@ export class Polynomial {
   }
 
   /**
+   * Clone new polynomial same to this
+   * @returns {Polynomial}
+   */
+  clone() {
+    return new Polynomial(this.coefficients.slice())
+  }
+
+  /**
    * Evaluate this polynomial with given t.
    * @param {number} t
    * @returns {number} P(t)

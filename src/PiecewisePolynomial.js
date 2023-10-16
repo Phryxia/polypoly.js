@@ -13,7 +13,11 @@ export class PiecewisePolynomial {
    */
   constructor(polynomials, knots) {
     if (polynomials.length - knots.length !== 1) {
-      throw new Error(`number of polynomials should be one more than knots`)
+      throw new Error(
+        `number of polynomials(${
+          polynomials.length
+        }) should be more than one knots(${knots.length + 1})`,
+      )
     }
 
     /**
@@ -57,7 +61,7 @@ export class PiecewisePolynomial {
    * @returns {PiecewisePolynomial}
    */
   add(p) {
-    return this.operate(p, this.polynomials[0].add)
+    return this.#operate(p, this.polynomials[0].add)
   }
 
   /**
@@ -79,7 +83,7 @@ export class PiecewisePolynomial {
    * @returns {PiecewisePolynomial}
    */
   #operate(p, op) {
-    if (isPiecewise(p)) {
+    if (p.polynomials) {
       const newKnots = mergeKnots(this.knots, p.knots)
       const pA = this.split(newKnots)
       const pB = p.split(newKnots)
@@ -106,14 +110,17 @@ export class PiecewisePolynomial {
    */
   split(newKnots) {
     let oldPtr = 0
-    const newPolynomials = [this.polynomials[0]]
+    const newPolynomials = []
 
     for (let newPtr = 0; newPtr < newKnots.length; ++newPtr) {
-      if (newKnots[newPtr] >= this.knots[oldPtr]) {
-        oldPtr++
+      newPolynomials.push(this.polynomials[oldPtr].clone())
+
+      if (this.knots[oldPtr] === newKnots[newPtr]) {
+        oldPtr = Math.min(oldPtr + 1, this.knots.length)
       }
-      newPolynomials.push(this.polynomials[oldPtr])
     }
+    newPolynomials.push(this.polynomials[oldPtr].clone())
+
     return new PiecewisePolynomial(newPolynomials, newKnots)
   }
 
@@ -130,4 +137,35 @@ export class PiecewisePolynomial {
     }
     return str
   }
+}
+
+/**
+ * Merge two increasing ordered knots
+ * If there are several duplicated knots, then each of them will be transfered
+ * to result knots. For example, [0, 0] and [0, 1, 1] will cause [0, 0, 1, 1].
+ *
+ * @param {number[]} knots0
+ * @param {number[]} knots1
+ */
+function mergeKnots(knots0, knots1) {
+  const knots = []
+
+  let i0 = 0
+  let i1 = 0
+  while (i0 < knots0.length && i1 < knots1.length) {
+    if (knots0[i0] === knots1[i1]) {
+      knots.push(knots0[i0])
+      i0 += 1
+      i1 += 1
+    } else if (knots0[i0] < knots1[i1]) {
+      knots.push(knots0[i0])
+      i0 += 1
+    } else {
+      knots.push(knotsi1[i1])
+      i1 += 1
+    }
+  }
+  knots.push(...knots0.slice(i0))
+  knots.push(...knots1.slice(i1))
+  return knots
 }
