@@ -61,7 +61,18 @@ export class PiecewisePolynomial {
    * @returns {PiecewisePolynomial}
    */
   add(p) {
-    return this.#operate(p, this.polynomials[0].add)
+    return this.#operate(p, Polynomial.add)
+  }
+
+  /**
+   * Returns new `PiecewisePolynomial` from `this` subtracted by `p`
+   * If `p` is `Polynomial` then every piece will be subtracted samely.
+   * Otherwise, new knots will be computed within O(n) time complexity.
+   * @param {Polynomial | PiecewisePolynomial} p
+   * @returns {PiecewisePolynomial}
+   */
+  sub(p) {
+    return this.#operate(p, Polynomial.sub)
   }
 
   /**
@@ -72,14 +83,14 @@ export class PiecewisePolynomial {
    * @returns {PiecewisePolynomial}
    */
   mul(p) {
-    return this.#operate(p, this.polynomials[0].mul)
+    return this.#operate(p, Polynomial.mul)
   }
 
   /**
    * Helper method for internal operation. Takes `p` and preprocess knots
    * if `p` is `PiecewisePolynomial`. Otherwise just apply operation evenly.
    * @param {Polynomial | PiecewisePolynomial} p
-   * @param {(p: Polynomial) => Polynomial} op
+   * @param {(p1: Polynomial, p2: Polynomial) => Polynomial} op
    * @returns {PiecewisePolynomial}
    */
   #operate(p, op) {
@@ -87,18 +98,16 @@ export class PiecewisePolynomial {
       const newKnots = mergeKnots(this.knots, p.knots)
       const pA = this.split(newKnots)
       const pB = p.split(newKnots)
-      pA.polynomials = pA.polynomials.map((polynomial, index) => {
-        const tempOp = op.bind(polynomial)
-        return tempOp(pB.polynomials[index])
-      })
+      pA.polynomials = pA.polynomials.map((polynomial, index) =>
+        op(polynomial, pB.polynomials[index]),
+      )
       return pA
     }
 
     const result = new PiecewisePolynomial(this.polynomials, this.knots)
-    result.polynomials = result.polynomials.map((polynomial) => {
-      const tempOp = op.bind(polynomial)
-      return tempOp(p)
-    })
+    result.polynomials = result.polynomials.map((polynomial) =>
+      op(polynomial, p),
+    )
     return result
   }
 
