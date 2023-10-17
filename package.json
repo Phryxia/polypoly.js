@@ -18,6 +18,7 @@
   "type": "module",
   "main": "./src/index.js",
   "exports": "./src/index.js",
+  "types": "./src/index.d.ts",
   "scripts": {
     "test": "vitest",
     "coverage": "vitest run --coverage"
