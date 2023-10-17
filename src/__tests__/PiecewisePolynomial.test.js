@@ -22,7 +22,9 @@ describe('PiecewisePolynomial.prototype.split', () => {
       polys[2],
     ])
   })
+})
 
+describe('PiecewisePolynomial.prototype.operate', () => {
   it('should have duplicated number of knots as original inptus', () => {
     const pp0 = new PiecewisePolynomial(
       [
@@ -47,6 +49,42 @@ describe('PiecewisePolynomial.prototype.split', () => {
     expect(pp2.knots).toMatchObject([0, 0, 1, 1, 2])
   })
 
+  it("should follwing README's merge rule", () => {
+    const pp0 = new PiecewisePolynomial(
+      [
+        new Polynomial([1]),
+        new Polynomial([2]),
+        new Polynomial([3]),
+        new Polynomial([4]),
+      ],
+      [0, 1, 1],
+    )
+    const pp1 = new PiecewisePolynomial(
+      [
+        new Polynomial([10]),
+        new Polynomial([20]),
+        new Polynomial([30]),
+        new Polynomial([40]),
+      ],
+      [0, 0, 2],
+    )
+    const pp2 = pp0.add(pp1)
+
+    expect(pp2).toMatchObject({
+      polynomials: [
+        new Polynomial([11]),
+        new Polynomial([22]),
+        new Polynomial([32]),
+        new Polynomial([33]),
+        new Polynomial([34]),
+        new Polynomial([44]),
+      ],
+      knots: [0, 0, 1, 1, 2],
+    })
+  })
+})
+
+describe('PiecewisePolynomial.prototype.evaluate', () => {
   it('should evaluate the polynomial for valid position', () => {
     const polys = [
       new Polynomial([0]),

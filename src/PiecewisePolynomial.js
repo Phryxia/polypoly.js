@@ -161,7 +161,7 @@ function mergeKnots(knots0, knots1) {
       knots.push(knots0[i0])
       i0 += 1
     } else {
-      knots.push(knotsi1[i1])
+      knots.push(knots1[i1])
       i1 += 1
     }
   }
