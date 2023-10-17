@@ -1,10 +1,22 @@
 {
-  "name": "polypoly.js",
+  "name": "@phryxia/polypoly",
   "description": "Tiny javascript library implements piecewise polynomial",
   "version": "0.0.1",
-  "main": "./src/index.js",
   "license": "MIT",
+  "private": false,
+  "keywords": [
+    "polynomial",
+    "piecewise",
+    "math",
+    "javascript"
+  ],
+  "author": {
+    "name": "phryxia",
+    "email": "xahhaepica@gmail.com"
+  },
+  "repository": "github:Phryxia/polypoly.js",
   "type": "module",
+  "main": "./src/index.js",
   "exports": "./src/index.js",
   "scripts": {
     "test": "vitest",
