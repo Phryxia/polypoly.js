@@ -1,8 +1,6 @@
 import { Polynomial } from './Polynomial'
 import { createMaxLessOrEqualFinder } from './BinarySearch'
 
-const knotIndexFinder = createMaxLessOrEqualFinder((a, b) => a - b)
-
 export class PiecewisePolynomial {
   /**
    * Create n-piecewise polynomial for (n - 1) `knots`.
@@ -29,6 +27,17 @@ export class PiecewisePolynomial {
      * @type {number[]} (n - 1)-length sorted knots which divides real set
      */
     this.knots = knots
+
+    if (knots.length >= 200) {
+      this.knotIndexFinder = createMaxLessOrEqualFinder((a, b) => a - b)
+    } else {
+      this.knotIndexFinder = (list, target) => {
+        for (let i = list.length - 1; i >= 0; --i) {
+          if (list[i] <= target) return i
+        }
+        return -1
+      }
+    }
   }
 
   /**
@@ -38,7 +47,7 @@ export class PiecewisePolynomial {
    * @returns {number}
    */
   evaluate(t) {
-    const index = knotIndexFinder(this.knots, t) + 1
+    const index = this.knotIndexFinder(this.knots, t) + 1
     return this.polynomials[index].evaluate(t)
   }
 
