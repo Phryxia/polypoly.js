@@ -1,15 +1,22 @@
 # PolyPoly.js
 
-Simple JavaScript piecewise polynomial library.
-Only very basic features are available for right now.
+Simple JavaScript piecewise polynomial library. It's well defined and pass elaborated tests.
+
+## Install
+
+```
+npm i @phryxia/polypoly
+```
+
+If you use other package manager, feel free to use them.
 
 ## Features
 
 - Scaling, addition, multiplication of (piecewise) polynomials
 - Piecewise polynomials which have different intervals don't matter
-- Fast evaluation using binary search for piecewise polynomials
+- Fast evaluation using binary search for big (>=200) piecewise polynomials
 - Can have zero length interval though it doesn't evaluated.
-   - Still this is helpful for some cases(ex: Explicit spline computation)
+   - Still this is helpful for some cases because it holds internal expressions.
 
 ## Usage
 
@@ -94,7 +101,7 @@ You can `add`, `subtract` or `multiply` with either `Polynomial` or `PiecewisePo
 If two polynomials have different `knots` then it properly merges them with following manners
 
 - `newKnots` = `knots1` ∪ `knots2`
-- If `x` is `k1`-duplicated in `knots1` and `k2`-duplicated in `knots2` (`k1`, `k2` may `0`), then `newKnots` have `max(k1, k2)`-duplicated `x`.
+- If `x` is *k1*-duplicated in `knots1` and *k2*-duplicated in `knots2` (*k1*, *k2* may *0*), then `newKnots` have *max(k1, k2)*-duplicated `x`.
 - When two interval shares equal upper bound, they don't appear again.
 
 See following example.
@@ -113,5 +120,14 @@ polynomial a+A   b+B   b+C   c+C   d+C   d+D
 knots          0     0     1     1     2
 ```
 
-Although 0-length intervals are skipped when evaluated, but combining two `PicewisePolynomial`s won't erase such intervals. This is helpful when you compute NURB like things.
+Because of this behavior, 0-length intervals are always skipped when evaluated. But combining two `PicewisePolynomial`s won't erase such intervals. This is helpful when you compute NURBS like things.
 
+## Contributions
+
+I always appreciated for your considerations and enthusiasm!
+
+1. BEFORE you create a PR, please **raise an issue and describe** what you're going to do. This prevents unhelpful efforts for too early implementation. There is no strict template for raising issues, but please write it in English so that communities can understand it.
+2. Please enable `prettier` formatter and follow repository's `.prettierrc` for your IDE. If you don't know how to do so, please [google it](https://www.google.com/search?q=vscode+prettier+setting).
+3. Please use `yarn` for package manager and must commit `yarn.lock` whenever something is changed.
+
+After cloning this repository, all you have to do is just typing `yarn`. Note that `polypoly.js` uses `vitest` for unit testing. For your intrests see `package.json`
