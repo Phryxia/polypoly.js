@@ -3,7 +3,6 @@
   "description": "Tiny javascript library implements piecewise polynomial",
   "version": "1.0.0",
   "license": "MIT",
-  "private": false,
   "keywords": [
     "polynomial",
     "piecewise",
