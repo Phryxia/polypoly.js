@@ -2,13 +2,6 @@ import { Polynomial } from './Polynomial'
 import { createMaxLessOrEqualFinder } from './BinarySearch'
 
 export class PiecewisePolynomial {
-  /**
-   * Create n-piecewise polynomial for (n - 1) `knots`.
-   * Each k-th polynomial take place for [knots[k - 1], knots[k])
-   * The behavior of duplicated knots is undefined.
-   * @param {Polynomial[]} polynomials
-   * @param {number[]} knots
-   */
   constructor(polynomials, knots) {
     if (polynomials.length - knots.length !== 1) {
       throw new Error(
@@ -18,14 +11,7 @@ export class PiecewisePolynomial {
       )
     }
 
-    /**
-     * @type {Polynomial[]} n-length independent polynomials
-     */
     this.polynomials = polynomials
-
-    /**
-     * @type {number[]} (n - 1)-length sorted knots which divides real set
-     */
     this.knots = knots
 
     if (knots.length >= 200) {
@@ -40,57 +26,25 @@ export class PiecewisePolynomial {
     }
   }
 
-  /**
-   * Evaluate this polynomial for given value `t`
-   * This takes O(lg n) time complexity.
-   * @param {number} t
-   * @returns {number}
-   */
   evaluate(t) {
     const index = this.knotIndexFinder(this.knots, t) + 1
     return this.polynomials[index].evaluate(t)
   }
 
-  /**
-   * Returns new `PiecewisePolynomial` from `this` scaled by `x`
-   * @param {number} x
-   * @returns {PiecewisePolynomial}
-   */
   scale(x) {
     const result = new PiecewisePolynomial(this.polynomials, this.knots)
     result.polynomials = result.polynomials.map((poly) => poly.scale(x))
     return result
   }
 
-  /**
-   * Returns new `PiecewisePolynomial` from `this` added by `p`
-   * If `p` is `Polynomial` then every piece will be added samely.
-   * Otherwise, new knots will be computed within O(n) time complexity.
-   * @param {Polynomial | PiecewisePolynomial} p
-   * @returns {PiecewisePolynomial}
-   */
   add(p) {
     return this.#operate(p, Polynomial.add)
   }
 
-  /**
-   * Returns new `PiecewisePolynomial` from `this` subtracted by `p`
-   * If `p` is `Polynomial` then every piece will be subtracted samely.
-   * Otherwise, new knots will be computed within O(n) time complexity.
-   * @param {Polynomial | PiecewisePolynomial} p
-   * @returns {PiecewisePolynomial}
-   */
   sub(p) {
     return this.#operate(p, Polynomial.sub)
   }
 
-  /**
-   * Returns new `PiecewisePolynomial` from `this` multiplied by `p`
-   * If `p` is `Polynomial` then every piece will be multiplied samely.
-   * Otherwise, new knots will be computed within O(n) time complexity.
-   * @param {Polynomial | PiecewisePolynomial} p
-   * @returns {PiecewisePolynomial}
-   */
   mul(p) {
     return this.#operate(p, Polynomial.mul)
   }
@@ -120,12 +74,6 @@ export class PiecewisePolynomial {
     return result
   }
 
-  /**
-   * Returns new PiecewisePolynomial using given `newKnots`.
-   * Note that `newKnots` ⊆ `this.knots`.
-   * @param {number[]} newKnots
-   * @returns {PiecewisePolynomial}
-   */
   split(newKnots) {
     let oldPtr = 0
     const newPolynomials = []
@@ -142,10 +90,6 @@ export class PiecewisePolynomial {
     return new PiecewisePolynomial(newPolynomials, newKnots)
   }
 
-  /**
-   * Return stringify form of `this`
-   * @returns {string}
-   */
   toString() {
     let str = ''
     for (let i = 0; i <= this.knots.length; ++i) {
