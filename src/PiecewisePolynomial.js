@@ -38,15 +38,15 @@ export class PiecewisePolynomial {
   }
 
   add(p) {
-    return this.#operate(p, Polynomial.add)
+    return this.operate(p, Polynomial.add)
   }
 
   sub(p) {
-    return this.#operate(p, Polynomial.sub)
+    return this.operate(p, Polynomial.sub)
   }
 
   mul(p) {
-    return this.#operate(p, Polynomial.mul)
+    return this.operate(p, Polynomial.mul)
   }
 
   /**
@@ -56,7 +56,7 @@ export class PiecewisePolynomial {
    * @param {(p1: Polynomial, p2: Polynomial) => Polynomial} op
    * @returns {PiecewisePolynomial}
    */
-  #operate(p, op) {
+  operate(p, op) {
     if (p.polynomials) {
       const newKnots = mergeKnots(this.knots, p.knots)
       const pA = this.split(newKnots)
